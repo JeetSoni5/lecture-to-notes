@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LectureMind - Turn Any Lecture into Conceptual Notes</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Hidden HTML5 Audio Element for Real Media Playback -->
+  <audio id="lectureNativeAudio" style="display: none;"></audio>
+
+  <!-- Global App Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand-logo" onclick="navigateToStep('landing')">
+        <div class="logo-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
+            <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
+            <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/>
+            <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
+          </svg>
+        </div>
+        <span class="logo-text">LectureMind</span>
+      
+      </div>
+
+      <!-- Step Navigation Tracker -->
+      <nav class="step-indicator" id="stepIndicator">
+        <button class="step-nav-btn active" data-step="landing" onclick="navigateToStep('landing')">
+          <span class="step-num">1</span>
+          <span class="step-label">Home</span>
+        </button>
+        <span class="step-divider">›</span>
+        <button class="step-nav-btn" data-step="upload">
+          <span class="step-num">2</span>
+          <span class="step-label">Upload</span>
+        </button>
+        <span class="step-divider">›</span>
+        <button class="step-nav-btn" data-step="processing">
+          <span class="step-num">3</span>
+          <span class="step-label">Processing</span>
+        </button>
+        <span class="step-divider">›</span>
+        <button class="step-nav-btn" data-step="dashboard">
+          <span class="step-num">4</span>
+          <span class="step-label">Notes</span>
+        </button>
+        <span class="step-divider">›</span>
+        <button class="step-nav-btn" >
+          <span class="step-num">5</span>
+          <span class="step-label">Export</span>
+        </button>
+      </nav>
+
+      <div class="header-actions">
+        <button class="btn btn-sm btn-primary" onclick="navigateToStep('upload')">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+          Upload Any Lecture
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Multi-step Container -->
+  <main class="main-content">
+
+    <!-- ============================================== -->
+    <!-- SCREEN 1: LANDING PAGE                         -->
+    <!-- ============================================== -->
+    <section id="screen-landing" class="screen-section active">
+      <div class="hero-wrapper">
+        <div class="hero-badge">
+          <span class="pulse-dot"></span>
+          AI-Powered Lecture to Conceptual Notes Platform
+        </div>
+        
+        <h1 class="hero-title">
+          Turn any lecture recording into <br>
+          <span class="gradient-text">structured, conceptual notes</span>
+        </h1>
+        
+        <p class="hero-subtitle">
+          Upload any audio or video file, record live from your microphone, or paste a transcript. LectureMind extracts the audio, detects key concepts, writes formal definitions with real-world examples, and generates study guides automatically.
+        </p>
+
+        <div class="hero-cta-group">
+          <button class="btn btn-lg btn-primary shadow-glow" onclick="navigateToStep('upload')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            Process Your Lecture
+          </button>
+          <button class="btn btn-lg btn-secondary" onclick="openQuickPasteModal()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+            Paste Lecture Notes / Script
+          </button>
+        </div>
+
+    
+        <!-- Problem vs Solution PRD Block -->
+        <div class="prd-overview-grid">
+          <div class="prd-card problem-card">
+            <div class="card-icon-badge danger">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            </div>
+            <h3>The Problem</h3>
+            <p class="card-intro">Students spend considerable time and cognitive energy on manual labor:</p>
+            <ul class="check-list red-dots">
+              <li>Watching 1 to 2-hour long lectures repeatedly</li>
+              <li>Constantly pausing videos to jot down notes</li>
+              <li>Writing notes manually without clear structure</li>
+              <li>Struggling to isolate core conceptual definitions from banter</li>
+              <li>Reorganizing messy notes before exams</li>
+            </ul>
+            <div class="gap-alert">
+              <strong>The Gap:</strong> Watching a lecture ≠ Understanding ≠ Creating usable study material.
+            </div>
+          </div>
+
+          <div class="prd-card solution-card">
+            <div class="card-icon-badge success">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <h3>The Solution: LectureMind</h3>
+            <p class="card-intro">Transform your actual recordings into crystal-clear conceptual notes:</p>
+            <ul class="check-list green-dots">
+              <li><strong>Concept Extraction:</strong> Definitions, explanations, and real-world examples</li>
+              <li><strong>Smart Hierarchies:</strong> Automatically tags major topics and subtopics</li>
+              <li><strong>1-Minute Revision:</strong> Quick summary cards for rapid exam prep</li>
+              <li><strong>Key Points Extraction:</strong> High-yield exam facts highlighted</li>
+              <li><strong>Direct File Download:</strong> Instantly download PDF or Markdown notes to your device</li>
+            </ul>
+            <div class="tech-badge-row">
+              <span class="tech-pill">Web Audio API</span>
+              <span class="tech-pill">Gemini AI</span>
+              <span class="tech-pill">Whisper STT</span>
+              <span class="tech-pill">Direct PDF Downloader</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Target Users Banner -->
+        <div class="target-users-section">
+          <h4 class="section-subheading">primary uses</h4>
+          <div class="user-pill-list">
+            <div class="user-pill">
+              <span class="user-emoji">🎓</span>
+              <div>
+                <strong>College & University</strong>
+                <span>Engineering, Medicine, Law & Arts</span>
+              </div>
+            </div>
+            <div class="user-pill">
+              <span class="user-emoji">🏆</span>
+              <div>
+                <strong>Competitive Exams</strong>
+                <span>GRE, USMLE, GATE, Civil Services</span>
+              </div>
+            </div>
+            <div class="user-pill">
+              <span class="user-emoji">👩‍🏫</span>
+              <div>
+                <strong>Teachers & Institutes</strong>
+                <span>Course summaries & handouts</span>
+              </div>
+            </div>
+            <div class="user-pill">
+              <span class="user-emoji">💻</span>
+              <div>
+                <strong>Online Learners</strong>
+                <span>Coursera, YouTube, Zoom lectures</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- SCREEN 2: UPLOAD & INGESTION PAGE (NO PRESETS) -->
+    <!-- ============================================== -->
+    <section id="screen-upload" class="screen-section">
+      <div class="screen-container max-w-750">
+        <div class="page-title-block">
+          <span class="screen-step-tag">Step 2 of 5</span>
+          <h2>Upload Your Lecture</h2>
+          <p>Provide your own lecture media or content. Choose the method that best fits your source:</p>
+        </div>
+
+        <!-- Ingestion Mode Selector Tabs -->
+        <div class="ingestion-tabs-nav">
+          <button class="ingest-tab-btn active" id="tabBtnFile" onclick="switchIngestionTab('file')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+          Upload Media File
+          </button>
+          <button class="ingest-tab-btn" id="tabBtnText" onclick="switchIngestionTab('text')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+            Paste Lecture Notes
+          </button>
+        </div>
+
+        <!-- Optional Lecture Metadata Inputs -->
+        <div class="lecture-metadata-card">
+          <div class="form-row-2col">
+            <div class="form-group">
+              <label for="inputLectureTitle">Lecture Title / Topic (Optional)</label>
+              <input type="text" id="inputLectureTitle" placeholder="e.g. Molecular Biology: DNA Replication" oninput="handleMetaInputChange()">
+            </div>
+            <div class="form-group">
+              <label for="inputLectureSubject">Subject / Category (Optional)</label>
+              <input type="text" id="inputLectureSubject" placeholder="e.g. Biology, History, Physics" oninput="handleMetaInputChange()">
+            </div>
+          </div>
+        </div>
+
+        <!-- MODE 1: FILE UPLOAD DROPZONE -->
+        <div id="ingestModeFile" class="ingest-mode-panel active">
+          <div class="upload-dropzone" id="dropZone">
+            <input type="file" id="fileInput" accept=".mp4,.mp3,.wav,.m4a" class="file-input-hidden" onchange="handleUserFile(event)">
+            
+            <div class="dropzone-inner">
+              <div class="dropzone-icon">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="17 8 12 3 7 8"></polyline>
+                  <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+              </div>
+              <h3 id="dropzoneHeader">Drag & drop your lecture file here</h3>
+              <p class="dropzone-sub">Supported formats: <strong>MP4, MP3, WAV, M4A</strong> (Audio or Video)</p>
+              <div class="format-chips">
+                <span class="chip">MP4 (Video)</span>
+                <span class="chip">MP3 (Audio)</span>
+                <span class="chip">WAV (Audio)</span>
+                <span class="chip">M4A (Voice Memo)</span>
+              </div>
+              <button class="btn btn-outline1" type="button" onclick="document.getElementById('fileInput').click()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"></svg>
+                Browse files
+              </button>
+            </div>
+          </div>
+
+          <!-- File Details & Waveform Preview Card -->
+          <div class="file-details-card" id="fileDetailsCard" style="display: none;">
+            <div class="file-icon-box">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                <polyline points="13 2 13 9 20 9"></polyline>
+              </svg>
+            </div>
+            <div class="file-info-text">
+              <h4 id="selectedFileName">my_lecture.mp3</h4>
+              <div class="file-meta">
+                <span id="selectedFileSize">0 MB</span> • 
+                <span id="selectedDuration">Extracting audio duration...</span> • 
+                <span class="meta-status" id="selectedFileStatus">Ready to process</span>
+              </div>
+              <canvas id="uploadWaveformCanvas" class="upload-waveform" width="480" height="40"></canvas>
+            </div>
+            <button class="btn-clear-file" onclick="clearUploadedFile()" title="Remove file">✕</button>
+          </div>
+        </div>
+
+        <!-- MODE 2: MICROPHONE VOICE RECORDER -->
+        <div id="ingestModeMic" class="ingest-mode-panel">
+          <div class="mic-recorder-card">
+            <div class="mic-visualizer-container">
+              <div class="mic-pulse-ring" id="micPulseRing">
+                <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+                  <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                  <line x1="12" y1="19" x2="12" y2="22"></line>
+                </svg>
+              </div>
+              <h3 id="micStatusHeading">Record a Live Lecture</h3>
+              <p class="mic-status-sub" id="micStatusSub">Click Start Recording to capture lecture speech directly from your microphone.</p>
+              
+              <div class="record-timer" id="recordTimer">00:00</div>
+
+              <div class="audio-live-bars" id="audioLiveBars">
+                <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+                <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+                <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+                <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+              </div>
+            </div>
+
+            <div class="mic-action-buttons">
+              <button class="btn btn-md btn-primary" id="btnStartRecord" onclick="startMicRecording()">
+                ● Start Recording
+              </button>
+              <button class="btn btn-md btn-secondary" id="btnStopRecord" onclick="stopMicRecording()" style="display: none;">
+                ■ Stop & Process
+              </button>
+              <button class="btn btn-md btn-ghost" id="btnCancelRecord" onclick="cancelMicRecording()" style="display: none;">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- MODE 3: PASTE TRANSCRIPT / LECTURE TEXT -->
+        <div id="ingestModeText" class="ingest-mode-panel">
+          <div class="text-paste-card">
+            <div class="form-group">
+              <label for="rawLectureText">
+                Paste Lecture Script, Video Transcript, or Class Notes:
+              </label>
+              <textarea id="rawLectureText" rows="9" placeholder="Paste full lecture transcript, professor speaking notes, or class discussion text here...
+
+Example:
+'Photosynthesis is the biological process by which plants, algae, and certain bacteria convert light energy into chemical energy. The process occurs within chloroplasts, specifically utilizing the green pigment chlorophyll...'" oninput="handleRawTextChange()"></textarea>
+            </div>
+            <div class="text-stats-row">
+              <span id="textWordCount">0 words</span> • 
+              <span id="textCharCount">0 characters</span> • 
+              <span id="textEstDuration">~0 min lecture</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Generate Notes CTA Button -->
+        <div class="upload-action-row mt-4">
+          <button class="btn btn-primary btn-block btn-lg shadow-glow" id="btnStartProcessing" onclick="triggerDynamicProcessing()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+            Generate Conceptual Notes
+          </button>
+        </div>
+
+        <!-- Features Checklist Note -->
+        <div class="upload-footer-notice">
+          <div class="notice-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span>Supports any lecture topic. Processed privately with Web Audio API and Gemini AI.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- SCREEN 3: PROCESSING PAGE                      -->
+    <!-- ============================================== -->
+    <section id="screen-processing" class="screen-section">
+      <div class="screen-container max-w-650">
+        <div class="processing-card">
+          <div class="processing-header">
+            <div class="spinner-pulse"></div>
+            <div>
+              <h2 class="processing-title">Processing Your Lecture...</h2>
+              <p class="processing-subtitle" id="processingLectureName">Analyzing uploaded media stream</p>
+            </div>
+          </div>
+
+          <!-- The 5 Exact Pipeline Stages from Wireframe -->
+          <div class="pipeline-status-list">
+            <div class="stage-item completed" id="stage-upload">
+              <div class="stage-indicator">
+                <span class="icon-check">✓</span>
+                <span class="icon-spinner"></span>
+              </div>
+              <div class="stage-body">
+                <div class="stage-title-row">
+                  <span class="stage-title">Lecture uploaded</span>
+                  <span class="stage-badge" id="badge-upload">Complete</span>
+                </div>
+                <p class="stage-desc" id="stageDescUpload">Media stream received and validated</p>
+              </div>
+            </div>
+
+            <div class="stage-item completed" id="stage-audio">
+              <div class="stage-indicator">
+                <span class="icon-check">✓</span>
+                <span class="icon-spinner"></span>
+              </div>
+              <div class="stage-body">
+                <div class="stage-title-row">
+                  <span class="stage-title">Audio processed & decoded</span>
+                  <span class="stage-badge" id="badge-audio">Complete</span>
+                </div>
+                <p class="stage-desc" id="stageDescAudio">Extracted mono audio stream & generated waveform</p>
+              </div>
+            </div>
+
+            <div class="stage-item in-progress" id="stage-transcript">
+              <div class="stage-indicator">
+                <span class="icon-check">✓</span>
+                <span class="icon-spinner"></span>
+              </div>
+              <div class="stage-body">
+                <div class="stage-title-row">
+                  <span class="stage-title">Transcript generated</span>
+                  <span class="stage-badge" id="badge-transcript">Active</span>
+                </div>
+                <p class="stage-desc" id="stageDescTranscript">Transcribing speech with synchronized timestamps</p>
+              </div>
+            </div>
+
+            <div class="stage-item pending" id="stage-concepts">
+              <div class="stage-indicator">
+                <span class="icon-check">✓</span>
+                <span class="icon-spinner"></span>
+              </div>
+              <div class="stage-body">
+                <div class="stage-title-row">
+                  <span class="stage-title">Understanding concepts</span>
+                  <span class="stage-badge" id="badge-concepts">Queued</span>
+                </div>
+                <p class="stage-desc">Extracting definitions, explanations, and real-world examples</p>
+              </div>
+            </div>
+
+            <div class="stage-item pending" id="stage-notes">
+              <div class="stage-indicator">
+                <span class="icon-check">✓</span>
+                <span class="icon-spinner"></span>
+              </div>
+              <div class="stage-body">
+                <div class="stage-title-row">
+                  <span class="stage-title">Generating conceptual notes</span>
+                  <span class="stage-badge" id="badge-notes">Queued</span>
+                </div>
+                <p class="stage-desc">Synthesizing study guide, key takeaways & 1-minute summary</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Progress Bar with Percentage -->
+          <div class="progress-box">
+            <div class="progress-info-row">
+              <span class="progress-status-text" id="progressStatusText">Extracting audio waveform...</span>
+              <span class="progress-percent" id="progressPercent">35%</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" id="progressFill" style="width: 35%;"></div>
+            </div>
+            <div class="progress-footer-stats">
+              <span id="progressTimeElapsed">Time elapsed: 1s</span>
+              <span id="progressEstTime">AI processing active</span>
+            </div>
+          </div>
+
+          <!-- Real-time Live Log / AI Streamer Preview -->
+          <div class="ai-stream-preview">
+            <div class="stream-header">
+              <span class="terminal-dot red"></span>
+              <span class="terminal-dot yellow"></span>
+              <span class="terminal-dot green"></span>
+              <span class="stream-title">AI Processing Stream</span>
+            </div>
+            <div class="stream-logs" id="streamLogs">
+              <div class="log-line active">[00:01] Ingesting lecture payload...</div>
+            </div>
+          </div>
+
+          <div class="processing-skip-row">
+            <button class="btn btn-sm btn-ghost" onclick="skipProcessingToDashboard()">
+              ⚡ Skip ahead directly to Notes Dashboard
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- SCREEN 4: NOTES DASHBOARD                      -->
+    <!-- ============================================== -->
+    <section id="screen-dashboard" class="screen-section">
+      <div class="dashboard-layout">
+        
+        <!-- Left Sidebar / Key Points -->
+        <aside class="dashboard-sidebar">
+          <div class="lecture-header-card">
+            <span class="subject-badge" id="dashSubjectTag">General Academic</span>
+            <h2 class="dash-lecture-title" id="dashLectureTitle">Your Lecture</h2>
+            <p class="dash-lecture-sub" id="dashLectureSubtitle">AI-Generated Conceptual Study Guide</p>
+            
+            <div class="meta-stats-row">
+              <div class="m-stat">
+                <span class="m-stat-val" id="dashDuration">--</span>
+                <span class="m-stat-lbl">Duration</span>
+              </div>
+              <div class="m-stat">
+                <span class="m-stat-val" id="dashConceptCount">0</span>
+                <span class="m-stat-lbl">Concepts</span>
+              </div>
+              <div class="m-stat">
+                <span class="m-stat-val" id="dashTopicCount">0</span>
+                <span class="m-stat-lbl">Topics</span>
+              </div>
+            </div>
+
+            <button class="btn btn-primary btn-block mt-3" onclick="navigateToStep('export')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export Notes
+            </button>
+          </div>
+
+          <!-- Wireframe Key Points Box -->
+          <div class="key-points-widget">
+            <div class="widget-header">
+              <div class="widget-title-group">
+                <span class="icon-bulb">💡</span>
+                <h3>Key Points</h3>
+              </div>
+              <span class="badge-count" id="keyPointsBadge">0 points</span>
+            </div>
+            <p class="widget-sub">High-yield takeaways from this lecture:</p>
+            <ul class="key-points-list" id="sidebarKeyPointsList">
+              <!-- Dynamically populated from user's lecture -->
+            </ul>
+          </div>
+
+          <!-- Real Audio Playback Widget -->
+          <div class="audio-playback-widget">
+            <div class="audio-header">
+              <span>Lecture Audio Player</span>
+              <span class="audio-time" id="audioCurrentTime">00:00 / 00:00</span>
+            </div>
+            <div class="audio-slider-track" id="audioSliderTrack" onclick="handleTrackClick(event)">
+              <div class="audio-slider-fill" id="audioSliderFill" style="width: 0%;"></div>
+            </div>
+            <div class="audio-controls">
+              <button class="btn-audio-ctrl" id="btnPlayAudio" onclick="toggleRealAudio()">▶ Play</button>
+              <button class="btn-audio-speed" id="btnAudioSpeed" onclick="cyclePlaybackRate()">1.0x</button>
+              <span class="audio-topic-marker" id="audioTopicMarker">Live Media</span>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Main Notes Content Area -->
+        <div class="dashboard-main">
+          
+          <div class="dashboard-topbar">
+            <div class="search-input-wrapper">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input type="text" id="noteSearchInput" placeholder="Search within your generated notes..." oninput="handleSearch(this.value)">
+              <button class="search-clear-btn" id="searchClearBtn" onclick="clearSearch()" style="display: none;">✕</button>
+            </div>
+
+            <div class="dash-quick-actions">
+              <button class="btn btn-outline btn-sm" onclick="copyNotesQuick()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                Copy Notes
+              </button>
+              <button class="btn btn-primary btn-sm" onclick="navigateToStep('export')">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download PDF
+              </button>
+            </div>
+          </div>
+
+          <!-- Dashboard Tabs -->
+          <div class="tabs-header-bar">
+            <div class="tabs-list" role="tablist">
+              <button class="tab-item active" data-tab="overview" onclick="switchTab('overview')">Overview</button>
+              <button class="tab-item" data-tab="topics" onclick="switchTab('topics')">Topics</button>
+              <button class="tab-item" data-tab="concepts" onclick="switchTab('concepts')">Concepts</button>
+              <button class="tab-item" data-tab="summary" onclick="switchTab('summary')">Summary</button>
+              <button class="tab-item" data-tab="transcript" onclick="switchTab('transcript')">Transcript</button>
+            </div>
+          </div>
+
+          <!-- Tab Content Views -->
+          <div class="tab-contents-wrapper">
+            <div id="tab-overview" class="tab-pane active">
+              <div class="overview-banner">
+                <h3>Executive Summary</h3>
+                <p id="overviewText"></p>
+              </div>
+
+              <div class="notes-section-title">
+                <h4>Core Takeaway Highlights</h4>
+              </div>
+              <div class="takeaways-grid" id="takeawaysGrid"></div>
+
+              <div class="notes-section-title">
+                <h4>Conceptual Comparison Matrix</h4>
+              </div>
+              <div class="comparison-table-wrapper">
+                <table class="notes-table">
+                  <thead id="comparisonTableHead">
+                    <tr>
+                      <th>Entity / Concept</th>
+                      <th>Primary Domain</th>
+                      <th>Key Characteristic</th>
+                      <th>Operational Mechanism</th>
+                      <th>Real-World Application</th>
+                    </tr>
+                  </thead>
+                  <tbody id="comparisonTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div id="tab-topics" class="tab-pane">
+              <div class="tab-pane-header">
+                <h3>Major Topics Detected</h3>
+                <p>Chronologically structured based on the flow of your lecture:</p>
+              </div>
+              <div class="topics-accordion" id="topicsContainer"></div>
+            </div>
+
+            <div id="tab-concepts" class="tab-pane">
+              <div class="tab-pane-header">
+                <h3>Extracted Key Concepts</h3>
+                <p>Structured conceptual breakdowns with formal definitions, clear explanations, and memorable real-world examples:</p>
+              </div>
+              <div class="concepts-grid" id="conceptsContainer"></div>
+            </div>
+
+            <div id="tab-summary" class="tab-pane">
+              <div class="summary-toggle-bar">
+                <span class="toggle-label">Summary Mode:</span>
+                <div class="btn-group-toggle">
+                  <button class="btn-toggle active" id="btnSummary1Min" onclick="setSummaryMode('1min')">⚡ 1-Minute Quick Revision</button>
+                  <button class="btn-toggle" id="btnSummaryDetailed" onclick="setSummaryMode('detailed')">📖 Comprehensive Study Notes</button>
+                </div>
+              </div>
+              <div class="summary-card-view" id="summaryContentArea"></div>
+            </div>
+
+            <div id="tab-transcript" class="tab-pane">
+              <div class="tab-pane-header">
+                <h3>Synchronized Lecture Transcript</h3>
+                <p>Click any timestamp to seek playback directly to that section in your recording:</p>
+              </div>
+              <div class="transcript-stream" id="transcriptContainer"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- SCREEN 5: EXPORT PAGE (DIRECT DOWNLOAD ONLY)   -->
+    <!-- ============================================== -->
+    <section id="screen-export" class="screen-section">
+      <div class="screen-container max-w-700">
+        <div class="export-success-card">
+          <div class="success-icon-badge">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+          
+          <h2 id="exportHeading">Your notes are ready to download!</h2>
+          <p class="export-sub" id="exportSub">Click any format below to download your conceptual notes directly to your computer:</p>
+
+          <!-- Direct Download Cards -->
+          <div class="export-options-grid">
+            
+            <!-- OPTION 1: DIRECT PDF DOWNLOAD -->
+            <div class="export-option-card highlight" onclick="triggerPdfExport()">
+              <div class="opt-icon bg-purple">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              </div>
+              <div class="opt-details">
+                <h4>Download PDF (.pdf)</h4>
+                <p>Directly saves structured PDF study guide to your device (no print dialog).</p>
+              </div>
+              <span class="btn-chip primary">Download .pdf</span>
+            </div>
+
+            <!-- OPTION 2: COPY TO CLIPBOARD -->
+            <div class="export-option-card" onclick="copyNotesQuick()">
+              <div class="opt-icon bg-emerald">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              </div>
+              <div class="opt-details">
+                <h4>Copy Notes to Clipboard</h4>
+                <p>Instantly copy full structured notes to paste into Google Docs, Word, or messages.</p>
+              </div>
+              <span class="btn-chip">Copy All</span>
+            </div>
+
+          </div>
+
+          <div class="export-footer-actions">
+            <button class="btn btn-secondary" onclick="navigateToStep('dashboard')">
+              ← Return to Notes Dashboard
+            </button>
+            <button class="btn btn-primary" onclick="triggerPdfExport()">
+              Download PDF (.pdf)
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Toast Notification Container -->
+  <div id="toastNotification" class="toast-bubble">
+    <span class="toast-icon">✓</span>
+    <span id="toastMessage">File downloaded!</span>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
